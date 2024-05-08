@@ -36,7 +36,7 @@ export default function Products() {
             </div>
             <div className="py-2 mt-3 px-4 h-[80px]">
               <p className="font-semibold text-base">{product.name}</p>
-              <p className="font-light text-base">¥{product.price}~</p>
+              <p className="font-light text-base">¥{product.price}</p>
             </div>
           </div>
         </Link>
