@@ -40,7 +40,7 @@ export default function Page({ params }: { params: { id: string } }) {
   }
   return (
     <div className=" bg-white pb-6">
-      <Header back_link={"/products"} title={"商品詳細"} />
+      <Header title={"商品詳細"} />
       <div className="px-4 py-5 flex flex-col gap-4">
         <div className="">
           <Slider
@@ -91,7 +91,9 @@ export default function Page({ params }: { params: { id: string } }) {
           </div>
         </div>
         <Button>今すぐ買う</Button>
-        <Button variant="outline">カートに追加</Button>
+        <Button variant="outline" type="submit">
+          カートに追加
+        </Button>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Login from "@/components/Login";
+import Router from "next/router";
 import Link from "next/link";
 import { CartItem } from "@/types/cartItem ";
 
@@ -27,29 +28,21 @@ export default function Page() {
     fetchCart_items();
   }, []);
 
+  const handler = (path: string) => {
+    Router.push(path);
+  };
+
   return (
     <div>
       {status === "authenticated" ? (
         <div>
-          <Header title={"購入確認"} />
+          <Header title={"購入確定"} />
           <div className="mx-4 my-5 bg-white rounded-lg text-card-foreground shadow-sm grid gap-y-8 p-6">
-            <div>
-              <p className="font-bold mb-4">ログイン情報</p>
-              <div className="grid gap-y-3">
-                <p>{session.user?.name}</p>
-                <p>111-1111</p>
-                <p>東京都品川区hogehogehogehoge</p>
-                <p>000-0000-0000</p>
-              </div>
+            <div className="text-center">
+              <i className="ri-checkbox-circle-fill ri-6x text-green-500"></i>
+              <p className="text-xl font-bold">購入完了しました！</p>
             </div>
-            <div>
-              <p className="font-bold mb-4">登録済みのお支払い情報</p>
-              <div className="grid gap-y-3">
-                <p>xxxxxxxxxxx1111</p>
-                <p>04/25</p>
-                <p>TANAKATARO</p>
-              </div>
-            </div>
+
             <div className="grid gap-3">
               <p className="font-bold mb-4">注文情報</p>
               {cart_items.map((cart_item) => (
@@ -99,7 +92,7 @@ export default function Page() {
               </div>
             </div>
             <Button asChild>
-              <Link href="/cart_items/confirmed">注文を確定</Link>
+              <Link href="/products">商品一覧へ</Link>
             </Button>
           </div>
         </div>
