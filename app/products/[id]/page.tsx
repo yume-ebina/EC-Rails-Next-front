@@ -11,61 +11,55 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Slider from "@/components/Slider";
 
-// const fetchProduct = async (id: number): Promise<> => {
-//   const res = await fetch(`http://localhost:3000/api/v1/products/${id}`, {
-//     cache: "no-cache",
-//   });
-//   const product = res.json;
-//   return product;
-// };
+export default function Page({ params }: { params: { id: string } }) {
+  const [product, setProduct] = useState<Product>();
 
-// export default function Page() {
-//   const [product, setProduct] = useState<Product>();
-//   const fetchProduct = async ({ params }: { params: { id: number } }) => {
-//     try {
-//       const res = await axios.get(
-//         `http://localhost:3000/api/v1/products/${params.id}`
-//       );
-//       setProduct(res.data);
-//     } catch (error) {
-//       console.log("データの取得に失敗しました");
-//     }
-//   };
-//   useEffect(() => {
-//     fetchProduct();
-//   }, [id]);
-export default function Page() {
+  const fetchProduct = async () => {
+    const id = params.id;
+
+    try {
+      const res = await axios.get<Product>(
+        `http://localhost:3000/api/v1/products/${id}`
+      );
+      console.log(res.data);
+
+      setProduct(res.data);
+    } catch (error) {
+      console.log("データの取得に失敗しました");
+    }
+  };
+
+  useEffect(() => {
+    fetchProduct();
+  }, []);
+
+  if (!product) {
+    return <p>読み込み中...</p>;
+  }
   return (
     <div className=" bg-white pb-6">
       <Header back_link={"/products"} title={"商品詳細"} />
       <div className="px-4 py-5 flex flex-col gap-4">
-        <div className="h-[220px] rounded bg-slate-400">image</div>
+        <div className="">
+          <Slider
+            params={{
+              id: product.id,
+            }}
+          />
+        </div>
+
         <div className="flex flex-col gap-3">
-          <p className="text-xl text-slate-900 font-bold">オリジナルブレンド</p>
+          <p className="text-xl text-slate-900 font-bold">{product.name}</p>
           <div className="flex gap-4 text-base text-slate-900 font-bold">
-            <p>kind</p>
-            <p>kind</p>
+            <p>¥{product.price}</p>
           </div>
-          <p className="text-base text-slate-900">
-            酸味と苦味のバランスが取れている一番人気のブレンドです！ギフトにもおすすめです！
-          </p>
+          <p className="text-base text-slate-900">{product.description}</p>
         </div>
       </div>
       <div className="px-5 flex flex-col gap-5">
         <div className="flex flex-col gap-4">
-          <div className="flex justify-between">
-            <p className="font-semibold flex items-center">商品種類</p>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="-" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="100g">100g/¥800</SelectItem>
-                <SelectItem value="200g">200g/¥1500</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
           <div className="flex justify-between">
             <p className="font-semibold flex items-center">挽き方</p>
             <Select>
@@ -90,6 +84,8 @@ export default function Page() {
                 <SelectItem value="1">1</SelectItem>
                 <SelectItem value="2">2</SelectItem>
                 <SelectItem value="3">3</SelectItem>
+                <SelectItem value="4">4</SelectItem>
+                <SelectItem value="5">5</SelectItem>
               </SelectContent>
             </Select>
           </div>
