@@ -9,7 +9,7 @@ export default function Session() {
   const { data: session, status } = useSession();
   return (
     <div>
-      <Header back_link="/" title={"ログインまたは登録"} />
+      <Header title={"ログインまたは登録"} />
       <div>
         {status === "authenticated" ? (
           <div>

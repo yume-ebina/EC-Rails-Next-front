@@ -5,7 +5,7 @@ import Products from "@/components/Products";
 export default function Home() {
   return (
     <div>
-      <Header back_link="/" title={"商品一覧"} />
+      <Header title={"商品一覧"} />
       <div className="py-5 px-4 flex-grow">
         <Products />
       </div>
