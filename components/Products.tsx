@@ -1,6 +1,7 @@
 "use client";
 import { Product } from "@/types/product";
 import axios from "axios";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 export default function Products() {
@@ -24,19 +25,21 @@ export default function Products() {
   return (
     <div className="grid grid-cols-2 gap-4 md:grid-cols-6">
       {products.map((product) => (
-        <div className="rounded-3xl bg-white shadow-sm" key={product.id}>
-          <div className="h-[120px]">
-            <img
-              src={product.image}
-              alt="product image"
-              className="rounded-t-3xl"
-            />
+        <Link href={`/products/${product.id}`} key={product.id}>
+          <div className="rounded-3xl bg-white shadow-sm">
+            <div className="h-[120px]">
+              <img
+                src={product.image}
+                alt="product image"
+                className="rounded-t-3xl"
+              />
+            </div>
+            <div className="py-2 mt-3 px-4 h-[80px]">
+              <p className="font-semibold text-base">{product.name}</p>
+              <p className="font-light text-base">¥{product.price}</p>
+            </div>
           </div>
-          <div className="py-2 mt-3 px-4 h-[80px]">
-            <p className="font-semibold text-base">{product.name}</p>
-            <p className="font-light text-base">¥{product.price}~</p>
-          </div>
-        </div>
+        </Link>
       ))}
     </div>
   );
