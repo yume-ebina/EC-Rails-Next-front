@@ -47,12 +47,32 @@ export default function Page() {
               <div className="grid gap-y-3">
                 <p>xxxxxxxxxxx1111</p>
                 <p>04/25</p>
-                <p>TANAKATARO</p>
+                <p>HOGE HOGE</p>
               </div>
             </div>
             <div className="grid gap-3">
               <p className="font-bold mb-4">注文情報</p>
-              {cart_items.map((cart_item) => (
+              <div>
+                <div className="grid grid-cols-2 gap-4 mb-3">
+                  <div className=" aspect-square bg-slate-200 rounded-lg" />
+                  <div>
+                    <p className="font-bold mb-3">オリジナルブレンド</p>
+                    <p>¥700</p>
+                  </div>
+                </div>
+                <div className="grid gap-2">
+                  <div className="flex justify-between">
+                    <p className="text-sm">挽き方</p>
+                    <p className="text-sm">豆のまま</p>
+                  </div>
+                  <div className="flex justify-between">
+                    <p className="text-sm">数量</p>
+                    <p className="text-sm">1</p>
+                  </div>
+                  <div className="border border-slate-300"></div>
+                </div>
+              </div>
+              {/* {cart_items.map((cart_item) => (
                 <div key={cart_item.id}>
                   <div className="grid grid-cols-2 gap-4 mb-3">
                     <img
@@ -77,7 +97,7 @@ export default function Page() {
                     <div className="border border-slate-300"></div>
                   </div>
                 </div>
-              ))}
+              ))} */}
 
               <div className="grid gap-2">
                 <div className="flex justify-between">
@@ -99,7 +119,7 @@ export default function Page() {
               </div>
             </div>
             <Button asChild>
-              <Link href="/cart_items/confirmed">注文を確定</Link>
+              <Link href="/products/cart_items/confirmed">注文を確定</Link>
             </Button>
           </div>
         </div>

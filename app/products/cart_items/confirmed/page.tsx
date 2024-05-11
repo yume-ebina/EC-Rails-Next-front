@@ -28,10 +28,6 @@ export default function Page() {
     fetchCart_items();
   }, []);
 
-  const handler = (path: string) => {
-    Router.push(path);
-  };
-
   return (
     <div>
       {status === "authenticated" ? (
