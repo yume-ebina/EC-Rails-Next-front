@@ -57,11 +57,11 @@ export default function Page() {
                   <div className="grid gap-2">
                     <div className="flex justify-between">
                       <p className="text-sm">挽き方</p>
-                      <p className="text-sm">豆のまま</p>
+                      <p className="text-sm">{cart_item.grind}</p>
                     </div>
                     <div className="flex justify-between">
                       <p className="text-sm">数量</p>
-                      <p className="text-sm">1</p>
+                      <p className="text-sm">{cart_item.quantity}</p>
                     </div>
                     <div className="border border-slate-300"></div>
                   </div>

@@ -50,7 +50,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   // フォームの入力値を管理するstate
   const [quantity, setQuantity] = useState(1);
-  const [grind, setGrind] = useState(1);
+  const [grind, setGrind] = useState("豆のまま");
 
   // フォームの入力値を更新する関数
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,7 +70,7 @@ export default function Page({ params }: { params: { id: string } }) {
         },
       });
 
-      router.push("/products/cart_items");
+      router.push("/users/cart_items");
     } catch (error) {
       console.error(error);
     }
@@ -78,13 +78,13 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const FormSchema = z.object({
     quantity: z.string().transform((val) => Number(val)),
-    grind: z.string().transform((val) => Number(val)),
+    grind: z.string(),
   });
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       quantity: 1,
-      grind: 1,
+      grind: "豆のまま",
     },
   });
 
@@ -124,7 +124,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     <Select
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setGrind(parseInt(value));
+                        setGrind(value);
                       }}
                       value={String(field.value)}
                       defaultValue={String(field.value)}
@@ -135,10 +135,10 @@ export default function Page({ params }: { params: { id: string } }) {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="1">豆のまま</SelectItem>
-                        <SelectItem value="2">中挽き</SelectItem>
-                        <SelectItem value="3">粗挽き</SelectItem>
-                        <SelectItem value="4">中細挽き</SelectItem>
+                        <SelectItem value="豆のまま">豆のまま</SelectItem>
+                        <SelectItem value="中挽き">中挽き</SelectItem>
+                        <SelectItem value="粗挽き">粗挽き</SelectItem>
+                        <SelectItem value="中細挽き">中細挽き</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -146,7 +146,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 )}
               />
             </div>
-            <div className="">
+            <div>
               <FormField
                 control={form.control}
                 name="quantity"
