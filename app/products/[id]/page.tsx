@@ -1,9 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Product } from "@/types/product";
-import axios from "axios";
 import Header from "@/components/Header";
+import Slider from "@/components/Slider";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -11,9 +17,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Slider from "@/components/Slider";
+import { Product } from "@/types/product";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 export default function Page({ params }: { params: { id: string } }) {
+  const router = useRouter();
   const [product, setProduct] = useState<Product>();
 
   const fetchProduct = async () => {
@@ -34,6 +47,46 @@ export default function Page({ params }: { params: { id: string } }) {
   useEffect(() => {
     fetchProduct();
   }, []);
+
+  // フォームの入力値を管理するstate
+  const [quantity, setQuantity] = useState(1);
+  const [grind, setGrind] = useState("豆のまま");
+
+  // フォームの入力値を更新する関数
+  const handleSubmit = async (e: React.FormEvent) => {
+    console.log("クリックしました");
+    const user_id = 1;
+    const product_id = product?.id;
+
+    e.preventDefault();
+    try {
+      // APIを呼び出して、cart_itemsを作成する
+      await axios.post("http://localhost:3000/api/v1/cart_items", {
+        cart_item: {
+          user_id,
+          product_id,
+          quantity,
+          grind,
+        },
+      });
+
+      router.push("/users/cart_items");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const FormSchema = z.object({
+    quantity: z.string().transform((val) => Number(val)),
+    grind: z.string(),
+  });
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      quantity: 1,
+      grind: "豆のまま",
+    },
+  });
 
   if (!product) {
     return <p>読み込み中...</p>;
@@ -58,43 +111,76 @@ export default function Page({ params }: { params: { id: string } }) {
           <p className="text-base text-slate-900">{product.description}</p>
         </div>
       </div>
-      <div className="px-5 flex flex-col gap-5">
-        <div className="flex flex-col gap-4">
-          <div className="flex justify-between">
-            <p className="font-semibold flex items-center">挽き方</p>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="-" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="bean">豆のまま</SelectItem>
-                <SelectItem value="naka">中挽き</SelectItem>
-                <SelectItem value="ara">粗挽き</SelectItem>
-                <SelectItem value="hoso">中細挽き</SelectItem>
-              </SelectContent>
-            </Select>
+      <Form {...form}>
+        <form onSubmit={handleSubmit} className="px-5 flex flex-col gap-5">
+          <div className="flex flex-col gap-4">
+            <div className="">
+              <FormField
+                control={form.control}
+                name="grind"
+                render={({ field }) => (
+                  <FormItem className="flex justify-between items-center">
+                    <FormLabel className="font-semibold">挽き方</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setGrind(value);
+                      }}
+                      value={String(field.value)}
+                      defaultValue={String(field.value)}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="選択してください" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="豆のまま">豆のまま</SelectItem>
+                        <SelectItem value="中挽き">中挽き</SelectItem>
+                        <SelectItem value="粗挽き">粗挽き</SelectItem>
+                        <SelectItem value="中細挽き">中細挽き</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div>
+              <FormField
+                control={form.control}
+                name="quantity"
+                render={({ field }) => (
+                  <FormItem className="flex justify-between items-center">
+                    <FormLabel className="font-semibold">数量</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setQuantity(parseInt(value));
+                      }}
+                      value={String(field.value)}
+                      defaultValue={String(field.value)}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="選択してください" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="1">1</SelectItem>
+                        <SelectItem value="2">2</SelectItem>
+                        <SelectItem value="3">3</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-          <div className="flex justify-between">
-            <p className="font-semibold flex items-center">数量</p>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="-" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">1</SelectItem>
-                <SelectItem value="2">2</SelectItem>
-                <SelectItem value="3">3</SelectItem>
-                <SelectItem value="4">4</SelectItem>
-                <SelectItem value="5">5</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        <Button>今すぐ買う</Button>
-        <Button variant="outline" type="submit">
-          カートに追加
-        </Button>
-      </div>
+          <Button type="submit">購入する</Button>
+        </form>
+      </Form>
     </div>
   );
 }
