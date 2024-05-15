@@ -2,13 +2,15 @@
 import Header from "@/components/Header";
 import Login from "@/components/Login";
 import { Button } from "@/components/ui/button";
-import { CartItem, CartItemPrice } from "@/types/cartItem ";
+import { CartItem } from "@/types/cartItem ";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Cart_items() {
+  const router = useRouter();
   const { data: session, status } = useSession();
   const [cart_items, setCart_items] = useState<CartItem[]>([]);
 
@@ -33,6 +35,15 @@ export default function Cart_items() {
   );
   const addTax = subtotal * 0.1;
   const shipping = cart_items ? 500 : 0;
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete("http://localhost:3000/api/v1/cart_items/destroy_all");
+      router.push("/products");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div>
@@ -104,8 +115,15 @@ export default function Cart_items() {
                     </div>
                   </div>
                 </div>
+                <Button
+                  variant="link"
+                  className="text-primary"
+                  onClick={handleDelete}
+                >
+                  カートの中身を全て削除
+                </Button>
                 <Button asChild>
-                  <Link href="/users/cart_items/confirm">注文する</Link>
+                  <Link href="/users/cart_items/confirm">注文手続きへ進む</Link>
                 </Button>
                 <Button asChild variant="outline">
                   <Link href="/products">買い物を続ける</Link>

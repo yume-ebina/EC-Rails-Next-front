@@ -11,13 +11,13 @@ export default function Footer() {
             <p className="text-xs mt-1">メニュー</p>
           </div>
         </Link>
-        <Link href="/">
+        <Link href="/users/ordered">
           <div className="flex flex-col items-center">
             <i className="ri-user-line ri-lg"></i>
             <p className="text-xs mt-1">購入履歴</p>
           </div>
         </Link>
-        <Link href="/">
+        <Link href="/users">
           <div className="flex flex-col items-center">
             <i className="ri-user-line ri-lg"></i>
             <p className="text-xs mt-1">マイページ</p>
