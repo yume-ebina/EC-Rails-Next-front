@@ -51,10 +51,10 @@ export default function Cart_items() {
         <div>
           <Header title={"カート"} />
           {cart_items.length == 0 ? (
-            <div>
-              <p className="text-center text-xl mt-20">
-                カートに商品はありません
-              </p>
+            <div className="mx-4 my-5">
+              <div className="bg-white border border-slate-50 rounded-sm p-6">
+                <p className="text-center text-xl">カートに商品はありません</p>
+              </div>
             </div>
           ) : (
             <div className="mx-4 my-5 bg-white rounded-lg text-card-foreground shadow-sm grid gap-y-8 p-6">
