@@ -12,6 +12,13 @@ import { Label } from "@/components/ui/label";
 import { useSession, signIn } from "next-auth/react";
 
 export default function Login() {
+  // const handleLogin = async () => {
+  //   console.log("ログインしています");
+
+  //   signIn("line", { callbackUrl: "/" }).catch(() => {
+  //     console.log("ログインに失敗しました");
+  //   });
+  // };
   const { data: session, status } = useSession();
 
   if (status === "loading") {
@@ -50,9 +57,16 @@ export default function Login() {
               </div>
               <Input id="password" type="password" required />
             </div>
-            <Button type="submit" className="w-full">
+            {/* <Button type="submit" className="w-full">
               Login
             </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => signIn("google", {}, { prompt: "login" })}
+            >
+              Login with Google
+            </Button> */}
             <Button
               variant="outline"
               className="w-full"
