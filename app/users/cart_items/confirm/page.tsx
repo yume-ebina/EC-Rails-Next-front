@@ -39,23 +39,21 @@ export default function Page() {
   const addTax = subtotal * 0.1;
   const shipping = cart_items ? 500 : 0;
 
-  const order_id = 2;
+  // //cart_itemをorder_itemにセット
+  // useEffect(() => {
+  //   cart_items.map((cart_item) => {
+  //     setProduct_id(cart_item.id);
+  //     setQuantity(cart_item.quantity);
+  //     setGrind(cart_item.grind);
+  //     setPrice(cart_item.price);
+  //   });
+  // }, [cart_items]);
 
-  //cart_itemをorder_itemにセット
-  useEffect(() => {
-    cart_items.map((cart_item) => {
-      setProduct_id(cart_item.id);
-      setQuantity(cart_item.quantity);
-      setGrind(cart_item.grind);
-      setPrice(cart_item.price);
-    });
-  }, [cart_items]);
+  // useEffect(() => {
+  //   console.log(product_id, quantity, grind, price);
+  // }, [product_id, quantity, grind, price]);
 
-  useEffect(() => {
-    console.log(product_id, quantity, grind, price);
-  }, [product_id, quantity, grind, price]);
-
-  // 購入確定ボタンを押した場合にordersとorders_productsを作成する関数
+  // 購入確定ボタンを押した場合にordersを作成する関数
   const handleSubmit = async () => {
     const shipping_name = "ホゲホゲ";
     const postal_code = "111-1111";
@@ -70,7 +68,7 @@ export default function Page() {
 
     // e.preventDefault();
     try {
-      // APIを呼び出して、ordersとorders_productsを作成する
+      // APIを呼び出して、order#createする
       await axios.post("http://localhost:3000/api/v1/orders", {
         order: {
           shipping_name,
@@ -85,16 +83,6 @@ export default function Page() {
           user_id,
         },
       });
-      await axios.post("http://localhost:3000/api/v1/order_products", {
-        order_product: {
-          order_id,
-          product_id,
-          quantity,
-          grind,
-          price,
-        },
-      });
-      await axios.delete("http://localhost:3000/api/v1/cart_items/destroy_all");
       router.push("/users/cart_items/determine");
     } catch (error) {
       console.error(error);

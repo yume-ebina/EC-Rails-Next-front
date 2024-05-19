@@ -36,6 +36,41 @@ export default function Cart_items() {
   const addTax = subtotal * 0.1;
   const shipping = cart_items ? 500 : 0;
 
+  const handleSubmit = async () => {
+    const shipping_name = "ホゲホゲ";
+    const postal_code = "111-1111";
+    const address1 = "東京都";
+    const address2 = "品川区hogehoge";
+    const address3 = "hoge";
+    const shipping_tel = "000-0000-0000";
+    const postage = shipping;
+    const billing_amount = subtotal + addTax + shipping;
+    const status = 1;
+    const user_id = 1;
+    const order_products = cart_items;
+    try {
+      // APIを呼び出して、order.new、cart_itemsをorder_productsにコピー
+      await axios.post("http://localhost:3000/api/v1/orders/confirm", {
+        order: {
+          shipping_name,
+          postal_code,
+          address1,
+          address2,
+          address3,
+          shipping_tel,
+          postage,
+          billing_amount,
+          status,
+          user_id,
+          order_products,
+        },
+      });
+      router.push("/users/cart_items/confirm");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleDelete = async () => {
     try {
       await axios.delete("http://localhost:3000/api/v1/cart_items/destroy_all");
@@ -122,9 +157,7 @@ export default function Cart_items() {
                 >
                   カートの中身を全て削除
                 </Button>
-                <Button asChild>
-                  <Link href="/users/cart_items/confirm">注文手続きへ進む</Link>
-                </Button>
+                <Button onClick={handleSubmit}>注文手続きへ進む</Button>
                 <Button asChild variant="outline">
                   <Link href="/products">買い物を続ける</Link>
                 </Button>

@@ -14,5 +14,6 @@ export type Order = {
   billing_amount: number;
   status: number;
   user_id: number;
+  order_products: [];
   created_at: string;
 };

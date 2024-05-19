@@ -37,7 +37,7 @@ export default function Page() {
   };
 
   useEffect(() => {
-    fetchOrder_products();
+    // fetchOrder_products();
     fetchOrders();
   }, []);
 
