@@ -5,17 +5,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Login from "@/components/Login";
-import { CartItem } from "@/types/cartItem ";
+import { CartItem } from "@/types/index";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [cart_items, setCart_items] = useState<CartItem[]>([]);
-  const [product_id, setProduct_id] = useState("1");
-  const [quantity, setQuantity] = useState(1);
-  const [grind, setGrind] = useState("豆のまま");
-  const [price, setPrice] = useState(700);
 
   const fetchCart_items = async () => {
     try {
@@ -38,20 +34,6 @@ export default function Page() {
   );
   const addTax = subtotal * 0.1;
   const shipping = cart_items ? 500 : 0;
-
-  // //cart_itemをorder_itemにセット
-  // useEffect(() => {
-  //   cart_items.map((cart_item) => {
-  //     setProduct_id(cart_item.id);
-  //     setQuantity(cart_item.quantity);
-  //     setGrind(cart_item.grind);
-  //     setPrice(cart_item.price);
-  //   });
-  // }, [cart_items]);
-
-  // useEffect(() => {
-  //   console.log(product_id, quantity, grind, price);
-  // }, [product_id, quantity, grind, price]);
 
   // 購入確定ボタンを押した場合にordersを作成する関数
   const handleSubmit = async () => {
@@ -81,6 +63,7 @@ export default function Page() {
           billing_amount,
           status,
           user_id,
+          order_products: cart_items,
         },
       });
       router.push("/users/cart_items/determine");

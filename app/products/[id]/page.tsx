@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Product } from "@/types/product";
+import { Product } from "@/types/index";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -56,6 +56,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const handleSubmit = async (e: React.FormEvent) => {
     const user_id = 1;
     const product_id = product?.id;
+    const name = product?.name;
 
     e.preventDefault();
     try {
@@ -66,6 +67,7 @@ export default function Page({ params }: { params: { id: string } }) {
           product_id,
           quantity,
           grind,
+          name,
         },
       });
 

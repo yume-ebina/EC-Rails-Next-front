@@ -81,6 +81,7 @@ export type CartItem = {
 };
 
 export type Order = {
+  id: string;
   order_id: string;
   product_id: string;
   quantity: number;
@@ -96,7 +97,9 @@ export type Order = {
   billing_amount: number;
   status: number;
   user_id: number;
+  order_products: [];
   created_at: string;
+  name: string;
 };
 
 export type Product = {
@@ -106,4 +109,16 @@ export type Product = {
   price: number;
   image: string;
   images: [];
+};
+
+export type OrderProduct = {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
+  grind: string;
+  order_id: string;
+  product_id: string;
+  created_at: string;
 };

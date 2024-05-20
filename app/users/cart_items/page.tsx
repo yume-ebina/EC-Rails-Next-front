@@ -2,7 +2,7 @@
 import Header from "@/components/Header";
 import Login from "@/components/Login";
 import { Button } from "@/components/ui/button";
-import { CartItem } from "@/types/cartItem ";
+import { CartItem } from "@/types/index";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -49,7 +49,7 @@ export default function Cart_items() {
     const user_id = 1;
     const order_products = cart_items;
     try {
-      // APIを呼び出して、order.new、cart_itemsをorder_productsにコピー
+      // APIを呼び出して、railsにてorder.new、cart_itemsをorder_productsにコピー
       await axios.post("http://localhost:3000/api/v1/orders/confirm", {
         order: {
           shipping_name,
@@ -88,7 +88,9 @@ export default function Cart_items() {
           {cart_items.length == 0 ? (
             <div className="mx-4 my-5">
               <div className="bg-white border border-slate-50 rounded-sm p-6">
-                <p className="text-center text-xl">カートに商品はありません</p>
+                <p className="text-center text-base">
+                  カートに商品はありません
+                </p>
               </div>
             </div>
           ) : (
