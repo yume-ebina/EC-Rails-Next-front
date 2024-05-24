@@ -1,20 +1,25 @@
 "use client";
 import { Order } from "@/types/index";
 import axios from "axios";
-import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { OrderProduct } from "@/types";
+import Cookies from "js-cookie";
 
 export default function Orders() {
-  const { data: session, status } = useSession();
-
   const [orders, setOrders] = useState<Order[]>([]);
 
   const fetchOrders = async () => {
     try {
       const res = await axios.get<Order[]>(
-        "http://localhost:3000/api/v1/orders"
+        "http://localhost:3000/api/v1/orders",
+        {
+          headers: {
+            "access-token": Cookies.get("_access_token"),
+            client: Cookies.get("_client"),
+            uid: Cookies.get("_uid"),
+          },
+        }
       );
       setOrders(res.data);
     } catch (error) {

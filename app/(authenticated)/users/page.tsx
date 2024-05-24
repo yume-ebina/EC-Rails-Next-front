@@ -40,7 +40,7 @@ export default function Page() {
           </Link>
         </div>
         <div className="bg-white h-[64px] border-b">
-          <Link href="/users/ordered">
+          <Link href="/users/history">
             <div className="h-[64px] flex items-center justify-between px-4 py-5">
               <p className="text-base font-bold">購入履歴</p>
               <i className="ri-arrow-right-s-line ri-xl"></i>

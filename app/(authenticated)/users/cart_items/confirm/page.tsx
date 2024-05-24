@@ -1,22 +1,31 @@
 "use client";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
 import Login from "@/components/Login";
 import { CartItem } from "@/types/index";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "@/app/contexts/AuthContext";
+import Cookies from "js-cookie";
 
 export default function Page() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { isSignedIn, currentUser } = useContext(AuthContext);
+
   const [cart_items, setCart_items] = useState<CartItem[]>([]);
 
   const fetchCart_items = async () => {
     try {
       const res = await axios.get<CartItem[]>(
-        "http://localhost:3000/api/v1/cart_items"
+        "http://localhost:3000/api/v1/cart_items",
+        {
+          headers: {
+            "access-token": Cookies.get("_access_token"),
+            client: Cookies.get("_client"),
+            uid: Cookies.get("_uid"),
+          },
+        }
       );
       setCart_items(res.data);
     } catch (error) {
@@ -46,7 +55,7 @@ export default function Page() {
     const postage = shipping;
     const billing_amount = subtotal + addTax + shipping;
     const status = 1;
-    const user_id = 1;
+    const user_id = currentUser?.id;
 
     // e.preventDefault();
     try {
@@ -65,6 +74,11 @@ export default function Page() {
           user_id,
           order_products: cart_items,
         },
+        headers: {
+          "access-token": Cookies.get("_access_token"),
+          client: Cookies.get("_client"),
+          uid: Cookies.get("_uid"),
+        },
       });
       router.push("/users/cart_items/determine");
     } catch (error) {
@@ -74,7 +88,7 @@ export default function Page() {
 
   return (
     <div>
-      {status === "authenticated" ? (
+      {isSignedIn && currentUser ? (
         <div>
           <Header title={"購入確認"} />
           {cart_items.length == 0 ? (
@@ -88,7 +102,7 @@ export default function Page() {
               <div>
                 <p className="font-bold mb-4">ログイン情報</p>
                 <div className="grid gap-y-3">
-                  <p>{session.user?.name}</p>
+                  <p>{currentUser.name}</p>
                   <p>111-1111</p>
                   <p>東京都品川区hogehogehogehoge</p>
                   <p>000-0000-0000</p>

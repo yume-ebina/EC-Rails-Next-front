@@ -1,22 +1,29 @@
 "use client";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
 import Login from "@/components/Login";
-import { CartItem } from "@/types/index";
 import Link from "next/link";
 import { OrderProduct } from "@/types";
+import { AuthContext } from "@/app/contexts/AuthContext";
+import Cookies from "js-cookie";
 
 export default function Page() {
-  const { data: session, status } = useSession();
-  const [order_products, setOrder_products] = useState<CartItem[]>([]);
+  const { isSignedIn, currentUser } = useContext(AuthContext);
+  const [order_products, setOrder_products] = useState<OrderProduct[]>([]);
 
   const fetchOrder_products = async () => {
     try {
       const res = await axios.get<OrderProduct[]>(
-        "http://localhost:3000/api/v1/orders/determine"
+        "http://localhost:3000/api/v1/orders/determine",
+        {
+          headers: {
+            "access-token": Cookies.get("_access_token"),
+            client: Cookies.get("_client"),
+            uid: Cookies.get("_uid"),
+          },
+        }
       );
       setOrder_products(res.data);
     } catch (error) {
@@ -37,7 +44,7 @@ export default function Page() {
 
   return (
     <div>
-      {status === "authenticated" ? (
+      {isSignedIn && currentUser ? (
         <div>
           <Header title={"購入確定"} />
           <div className="mx-4 my-5 bg-white rounded-lg text-card-foreground shadow-sm grid gap-y-8 p-6">

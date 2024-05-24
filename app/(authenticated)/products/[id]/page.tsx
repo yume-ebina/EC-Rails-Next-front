@@ -1,4 +1,5 @@
 "use client";
+import { AuthContext } from "@/app/contexts/AuthContext";
 import Header from "@/components/Header";
 import Slider from "@/components/Slider";
 import { Button } from "@/components/ui/button";
@@ -21,13 +22,17 @@ import { Product } from "@/types/index";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { getCurrentUser } from "@/lib/api/auth";
+import Cookies from "js-cookie";
 
 export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter();
+  getCurrentUser;
   const [product, setProduct] = useState<Product>();
+  const { isSignedIn, currentUser } = useContext(AuthContext);
 
   const fetchProduct = async () => {
     const id = params.id;
@@ -37,6 +42,7 @@ export default function Page({ params }: { params: { id: string } }) {
         `http://localhost:3000/api/v1/products/${id}`
       );
       console.log(res.data);
+      console.log(currentUser?.id);
 
       setProduct(res.data);
     } catch (error) {
@@ -54,7 +60,8 @@ export default function Page({ params }: { params: { id: string } }) {
 
   // フォームの入力値を更新する関数
   const handleSubmit = async (e: React.FormEvent) => {
-    const user_id = 1;
+    const user_id = currentUser?.id;
+
     const product_id = product?.id;
     const name = product?.name;
 
@@ -68,6 +75,11 @@ export default function Page({ params }: { params: { id: string } }) {
           quantity,
           grind,
           name,
+        },
+        headers: {
+          "access-token": Cookies.get("_access_token"),
+          client: Cookies.get("_client"),
+          uid: Cookies.get("_uid"),
         },
       });
 
@@ -179,7 +191,13 @@ export default function Page({ params }: { params: { id: string } }) {
               />
             </div>
           </div>
-          <Button type="submit">購入する</Button>
+          {isSignedIn && currentUser ? (
+            <Button type="submit">購入する</Button>
+          ) : (
+            <Button type="submit" disabled>
+              購入する
+            </Button>
+          )}
         </form>
       </Form>
     </div>

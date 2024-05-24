@@ -4,20 +4,29 @@ import Login from "@/components/Login";
 import { Button } from "@/components/ui/button";
 import { CartItem } from "@/types/index";
 import axios from "axios";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "@/app/contexts/AuthContext";
+import Cookies from "js-cookie";
 
 export default function Cart_items() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { isSignedIn, currentUser } = useContext(AuthContext);
+  console.log(currentUser?.email);
   const [cart_items, setCart_items] = useState<CartItem[]>([]);
 
   const fetchCart_items = async () => {
     try {
       const res = await axios.get<CartItem[]>(
-        "http://localhost:3000/api/v1/cart_items"
+        "http://localhost:3000/api/v1/cart_items",
+        {
+          headers: {
+            "access-token": Cookies.get("_access_token"),
+            client: Cookies.get("_client"),
+            uid: Cookies.get("_uid"),
+          },
+        }
       );
       setCart_items(res.data);
     } catch (error) {
@@ -46,25 +55,35 @@ export default function Cart_items() {
     const postage = shipping;
     const billing_amount = subtotal + addTax + shipping;
     const status = 1;
-    const user_id = 1;
+    const user_id = currentUser?.id;
     const order_products = cart_items;
     try {
       // APIを呼び出して、railsにてorder.new、cart_itemsをorder_productsにコピー
-      await axios.post("http://localhost:3000/api/v1/orders/confirm", {
-        order: {
-          shipping_name,
-          postal_code,
-          address1,
-          address2,
-          address3,
-          shipping_tel,
-          postage,
-          billing_amount,
-          status,
-          user_id,
-          order_products,
+      await axios.post(
+        "http://localhost:3000/api/v1/orders/confirm",
+        {
+          order: {
+            shipping_name,
+            postal_code,
+            address1,
+            address2,
+            address3,
+            shipping_tel,
+            postage,
+            billing_amount,
+            status,
+            user_id,
+            order_products,
+          },
         },
-      });
+        {
+          headers: {
+            "access-token": Cookies.get("_access_token"),
+            client: Cookies.get("_client"),
+            uid: Cookies.get("_uid"),
+          },
+        }
+      );
       router.push("/users/cart_items/confirm");
     } catch (error) {
       console.error(error);
@@ -73,7 +92,16 @@ export default function Cart_items() {
 
   const handleDelete = async () => {
     try {
-      await axios.delete("http://localhost:3000/api/v1/cart_items/destroy_all");
+      await axios.delete(
+        "http://localhost:3000/api/v1/cart_items/destroy_all",
+        {
+          headers: {
+            "access-token": Cookies.get("_access_token"),
+            client: Cookies.get("_client"),
+            uid: Cookies.get("_uid"),
+          },
+        }
+      );
       router.push("/products");
     } catch (error) {
       console.error(error);
@@ -82,7 +110,7 @@ export default function Cart_items() {
 
   return (
     <div>
-      {status === "authenticated" ? (
+      {isSignedIn && currentUser ? (
         <div>
           <Header title={"カート"} />
           {cart_items.length == 0 ? (

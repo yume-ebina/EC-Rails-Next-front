@@ -1,14 +1,15 @@
 "use client";
+import { AuthContext } from "@/app/contexts/AuthContext";
 import Header from "@/components/Header";
 import Login from "@/components/Login";
 import { Button } from "@/components/ui/button";
-import { useSession } from "next-auth/react";
+import { useContext } from "react";
 
 export default function Page() {
-  const { data: session, status } = useSession();
+  const { isSignedIn, currentUser } = useContext(AuthContext);
   return (
     <div>
-      {status === "authenticated" ? (
+      {isSignedIn && currentUser ? (
         <div>
           <Header title={"ログイン情報"} />
           <div className="mx-4 my-5">
@@ -18,7 +19,7 @@ export default function Page() {
                 <Button variant="outline">変更</Button>
               </div>
               <div className="space-y-3">
-                <p>sample@hoge.com</p>
+                <p>{currentUser.email}</p>
                 <p>*********</p>
               </div>
             </div>
