@@ -54,7 +54,6 @@ export default function Page({ params }: { params: { id: string } }) {
 
   // フォームの入力値を更新する関数
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("クリックしました");
     const user_id = 1;
     const product_id = product?.id;
 
