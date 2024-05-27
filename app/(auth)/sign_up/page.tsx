@@ -1,10 +1,12 @@
-import { SignUpForm } from "@/components/signup_form";
+import Sign_up_form from "@/components/signup_form";
 import React from "react";
 
 const SignUp: React.FC = () => {
   return (
     <>
-      <SignUpForm />
+      <div className="container my-8">
+        <Sign_up_form />
+      </div>
     </>
   );
 };

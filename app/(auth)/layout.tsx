@@ -9,7 +9,7 @@ export default function RootLayout({
 }) {
   return (
     <>
-      <div className="bg-gray-100">{children}</div>
+      {children}
       <Footer />
     </>
   );

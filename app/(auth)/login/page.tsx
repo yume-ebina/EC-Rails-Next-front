@@ -4,7 +4,9 @@ import React from "react";
 const Login: React.FC = () => {
   return (
     <>
-      <LoginForm />
+      <div className="container mt-8">
+        <LoginForm />
+      </div>
     </>
   );
 };

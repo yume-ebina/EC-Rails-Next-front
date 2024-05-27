@@ -5,9 +5,20 @@ import { useRouter } from "next/navigation";
 import { SignInParams } from "@/types";
 import { signIn } from "@/lib/api/auth";
 import { AuthContext } from "@/app/contexts/AuthContext";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export const LoginForm: React.FC = () => {
-  const router = useRouter(); // Next.jsのルーターを利用
+  const router = useRouter();
 
   const { setIsSignedIn, setCurrentUser } = useContext(AuthContext);
   const [email, setEmail] = useState<string>("");
@@ -34,7 +45,7 @@ export const LoginForm: React.FC = () => {
         setIsSignedIn(true);
         setCurrentUser(res.data.data);
 
-        router.push("/"); // Next.jsのルーティングでリダイレクト
+        router.push("/");
 
         console.log("Signed in successfully!");
       } else {
@@ -47,47 +58,54 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto md:w-2/3 w-full px-10 pt-28 pb-16">
-      <p className="text-4xl font-bold text-center">ログイン</p>
-      <form onSubmit={handleSubmit} className="mb-0">
-        <div className="mt-16">
-          <label htmlFor="email" className="text-2xl">
-            メールアドレス
-          </label>
-          <input
-            type="email"
-            id="email"
-            placeholder="test@example.com"
-            className="w-full my-5 py-3"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            autoComplete="current-password"
-          />
-        </div>
-        <div>
-          <label htmlFor="password" className="text-2xl">
-            パスワード
-          </label>
-          <input
-            type="password"
-            id="password"
-            placeholder="password"
-            className="w-full my-5 py-3"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            autoComplete="current-password"
-          />
-        </div>
-        <div className="py-6 pb-24">
-          <button
-            type="submit"
-            className="font-bold text-xl bg-blue-500 px-3 rounded-full text-white"
-          >
-            ログイン
-          </button>
-        </div>
+    <div>
+      <form onSubmit={handleSubmit} className="mt-25">
+        <Card className="mx-auto max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-xl">ログイン</CardTitle>
+            <CardDescription>
+              メールアドレスとパスワードを入力してください
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">メールアドレス</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="current-password"
+                />
+              </div>
+              <div className="grid gap-2">
+                <div className="flex items-center">
+                  <Label htmlFor="password">パスワード</Label>
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                />
+              </div>
+              <Button variant="default" className="w-full" type="submit">
+                ログイン
+              </Button>
+            </div>
+            <div className="mt-4 text-center text-sm">
+              <Link href="sign_up" className="underline">
+                新規登録はこちら
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
       </form>
     </div>
   );
