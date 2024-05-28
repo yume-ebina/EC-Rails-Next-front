@@ -1,5 +1,5 @@
 "use client";
-import { Product } from "@/types/product";
+import { Product } from "@/types";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";

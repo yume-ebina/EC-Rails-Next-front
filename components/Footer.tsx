@@ -11,7 +11,7 @@ export default function Footer() {
             <p className="text-xs mt-1">メニュー</p>
           </div>
         </Link>
-        <Link href="/users/ordered">
+        <Link href="/users/history">
           <div className="flex flex-col items-center">
             <i className="ri-user-line ri-lg"></i>
             <p className="text-xs mt-1">購入履歴</p>
